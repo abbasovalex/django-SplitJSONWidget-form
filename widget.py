@@ -2,9 +2,6 @@
 from django import forms
 from django.forms import Widget
 from django import utils
-#import ast
-#import itertools
-#from django.utils.translation import ugettext_lazy as _
 import copy
 try:
     import simplejson as json
@@ -30,14 +27,14 @@ class SplitJSONWidget(forms.Widget):
 
     def _to_build(self, name, json_obj):
         inputs = []
-        if type(json_obj) is list:
+        if isinstance(json_obj, list):
             title = name.rpartition(self.separator)[2]
             _l = ['%s:%s' % (title, self.newline)]
             for key, value in enumerate(json_obj):
                 _l.append(self._to_build("%s%s%s" % (name,
                                          self.separator, key), value))
             inputs.extend([_l])
-        elif type(json_obj) is dict:
+        elif isinstance(json_obj, dict):
             title = name.rpartition(self.separator)[2]
             _l = ['%s:%s' % (title, self.newline)]
             for key, value in json_obj.items():
@@ -45,7 +42,7 @@ class SplitJSONWidget(forms.Widget):
                                                      self.separator, key),
                                          value))
             inputs.extend([_l])
-        elif type(json_obj) in (str, unicode, int):
+        elif isinstance(json_obj, (basestring, int)):
             name, _, key = name.rpartition(self.separator)
             inputs.append(self._as_text_field(name, key, json_obj))
         elif json_obj is None:
@@ -57,7 +54,7 @@ class SplitJSONWidget(forms.Widget):
         if l:
             result = u'<ul>'
             for el in l:
-                if type(el) is list:
+                if isinstance(el, list):
                     result += '%s' % self._prepare_as_ul(el)
                 else:
                     result += '<li>%s</li>' % el
@@ -67,63 +64,70 @@ class SplitJSONWidget(forms.Widget):
 
     def _to_pack_up(self, root_node, raw_data):
 
-        old_obj = raw_data
-        new_obj = {root_node: None}
+        copy_raw_data = copy.deepcopy(raw_data)
+        result = []
 
-        def _key_to_list(k):
-            obj = {}
-            result = []
-            for key, v in old_obj.items():
-                if key.startswith(k):
-                    apx, s, nk = key.rpartition(self.separator)
-                    # to transform value from list to string
-                    v = v[0] if type(v) is list and len(v) is 1 else v
+        def _to_parse_key(k, v):
+            if k.find(self.separator) is not -1:
+                apx, _, nk = k.rpartition(self.separator)
+                try:
+                    # parse list
+                    int(nk)
+                    l = []
+                    obj = {}
+                    if apx != root_node:
+                        for key, val in copy_raw_data.items():
+                            _, _, t = key.rpartition(self.separator)
+                            if key is k:
+                                del copy_raw_data[key]
+                            elif key.startswith(apx):
+                                try:
+                                    int(t)
+                                    l.append(val)
+                                except ValueError:
+                                    obj[t] = val
+                                del copy_raw_data[key]
+                        if obj:
+                            l.append(obj)
+                    l.append(v)
+                    return _to_parse_key(apx, l)
+                except ValueError:
+                    # parse dict
+                    d = {}
+                    if apx != root_node:
+                        for key, val in copy_raw_data.items():
+                            _, _, t = key.rpartition(self.separator)
+                            try:
+                                int(t)
+                                continue
+                            except ValueError:
+                                pass
+                            if key is k:
+                                del copy_raw_data[key]
+                            elif key.startswith(apx):
+                                d.update({t: val})
+                                del copy_raw_data[key]
+                    v = {nk: v}
+                    if d:
+                        v.update(d)
+                    return _to_parse_key(apx, v)
+            else:
+                return v
+
+        for k, v in raw_data.iteritems():
+            if k in copy_raw_data:
+                # to transform value from list to string
+                v = v[0] if isinstance(v, list) and len(v) is 1 else v
+                if k.find(self.separator) is not -1:
+                    d = _to_parse_key(k, v)
+                    # set type result
+                    if not len(result):
+                        result = type(d)()
                     try:
-                        int(nk)
-                        obj = v
-                    except ValueError:
-                        obj[nk] = v
-                    del old_obj[key]
-            if obj:
-                result.append(obj)
-                return result
-            return result
-
-        def _key_to_dict(k, obj):
-            if k.find(self.separator) is not -1:
-                apx, s, nk = k.rpartition(self.separator)
-                try:
-                    int(nk)
-                    return _key_to_dict(apx, _key_to_list(k))
-                except ValueError:
-                    obj = {nk: obj}
-                    return _key_to_dict(apx, obj)
-            return obj
-
-        for k, v in old_obj.items():
-            # to transform value from list to string
-            v = v[0] if type(v) is list and len(v) is 1 else v
-
-            if k.find(self.separator) is not -1:
-                apx, s, nk = k.rpartition(self.separator)
-                try:
-                    int(nk)
-                    d = _key_to_dict(apx, _key_to_list(k))
-                except ValueError:
-                    d = _key_to_dict(k, v)
-
-                #merge
-                keys = d.keys()
-                for k in keys:
-                    if k in new_obj:
-                        if type(new_obj[k]) is list and len(d[k]):
-                            new_obj[k].extend(d[k])
-                        elif type(new_obj[k]) is dict and len(d[k]):
-                            new_obj[k].update(d[k])
-                    else:
-                        new_obj.update(d)
-
-        return new_obj
+                        result.extend(d)
+                    except:
+                        result.update(d)
+        return result
 
     def value_from_datadict(self, data, files, name):
         data_copy = copy.deepcopy(data)
