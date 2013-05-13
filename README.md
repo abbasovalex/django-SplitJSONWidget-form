@@ -2,3 +2,144 @@ django-SplitJSONWidget-form
 ===========================
 
 Django form's widget that renders field JSON data as group fields that can edited.
+
+## Usage
+
+Don't forget download widget.py and place it to your django project or app
+
+### Examples (see to test_* functions)
+
+** forms.py **
+
+```python
+# -*- coding: utf8 -*-
+from django import forms
+from widgets import SplitJSONWidget
+
+
+class testForm(forms.Form):
+    attrs = {'class': 'special', 'size': '40'}
+    data = forms.CharField(widget=SplitJSONWidget(attrs=attrs, debug=True))
+```
+
+** views.py  **
+```python
+# -*- coding: utf8 -*-
+from django.shortcuts import render_to_response
+from django.template import RequestContext
+from forms import testForm
+
+
+def test_dict(request):
+    json = {
+            'a': 1,
+            'b': 2,
+            'c': 3,
+            'd': 4
+    }
+    form = testForm(request.POST or None, initial={'data': json})
+    if form.is_valid():
+        # validate and save
+        pass
+
+    template = 'test_template.html'
+    context = RequestContext(request, {'form': form})
+    return render_to_response(template, context)
+
+
+def test_nested_dict(request):
+    json = {
+            'a': {'aa': 1},
+            'b': [
+                2,
+                2,
+                {
+                    'q': 'qq',
+                    'w': 'ww',
+                    'z': [
+                        1,
+                        2,
+                        3,
+                        4,
+                        {
+                            'five': 'number',
+                            'six': 'number'
+                        },
+                        7
+                    ]
+                },
+                {
+                    '3': '33'
+                }
+            ],
+            'c': 3,
+            'd': {'e':'ee', 'f':'ff'},
+            'listA': [
+                99,
+                98,
+                97,
+                {'text': 'string'},
+            ]
+    }
+    form = testForm(request.POST or None, initial={'data': json})
+    if form.is_valid():
+        # validate and save
+        pass
+
+    template = 'test_template.html'
+    context = RequestContext(request, {'form': form})
+    return render_to_response(template, context)
+
+
+def test_list(request):
+    json = ['a', 'b', 'c']
+    form = testForm(request.POST or None, initial={'data': json})
+    if form.is_valid():
+        # validate and save
+        pass
+
+    template = 'test_template.html'
+    context = RequestContext(request, {'form': form})
+    return render_to_response(template, context)
+
+
+def test_nested_list(request):
+    json = [['a', 'b', [1, 2, 3]], {'c': 'best'}, 'd']
+    form = testForm(request.POST or None, initial={'data': json})
+    if form.is_valid():
+        # validate and save
+        pass
+
+    template = 'test_template.html'
+    context = RequestContext(request, {'form': form})
+    return render_to_response(template, context)
+```
+
+** test_template.py **
+
+```html
+<!doctype html>
+<html>
+	<head></head>
+	<body>
+		Errors: 
+        {% for field, error in form.errors.items %}
+            <ul>
+            <li>{{ error }}</li>
+            </ul>
+        {% empty %}
+            no errors 
+        {% endfor %}
+        <hr/>
+        List of:
+			<form action="" method="post">
+				{% csrf_token %}
+				{{ form.as_p}}
+				<input type="submit" value="Submit" />
+			</form>
+	</body>
+</html>
+```
+
+## Bugs
+See https://github.com/abbasovalex/django-SplitJSONWidget-form/issues?labels=bug&page=1&state=open
