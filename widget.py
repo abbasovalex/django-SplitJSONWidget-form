@@ -75,9 +75,11 @@ class SplitJSONWidget(forms.Widget):
                     int(nk)
                     l = []
                     obj = {}
+                    index = None
                     if apx != root_node:
                         for key, val in copy_raw_data.items():
-                            _, _, t = key.rpartition(self.separator)
+                            head, _, t = key.rpartition(self.separator)
+                            _, _, index = head.rpartition(self.separator)
                             if key is k:
                                 del copy_raw_data[key]
                             elif key.startswith(apx):
@@ -85,10 +87,14 @@ class SplitJSONWidget(forms.Widget):
                                     int(t)
                                     l.append(val)
                                 except ValueError:
-                                    obj[t] = val
+                                    if index in obj:
+                                        obj[index].update({t: val})
+                                    else:
+                                        obj[index] = {t: val}
                                 del copy_raw_data[key]
                         if obj:
-                            l.append(obj)
+                            for i in obj:
+                                l.append(obj[i])
                     l.append(v)
                     return _to_parse_key(apx, l)
                 except ValueError:
