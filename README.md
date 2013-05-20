@@ -76,10 +76,7 @@ def test_dict(request):
 Screenshot of the result (with debug mode):
 =============
 
-.. image::
-https://github.com/abbasovalex/django-SplitJSONWidget-form/blob/master/doc/screenshots/test_dict.png
-    :target:
-    https://github.com/abbasovalex/django-SplitJSONWidget-form/blob/master/doc/screenshots/test_dict.png
+![simple dict](https://github.com/abbasovalex/django-SplitJSONWidget-form/blob/master/doc/sreenshots/test_dict.png?raw=true)
 
 
 ### Example №2
@@ -180,10 +177,7 @@ def test_nested_dict(request):
 Screenshot of the result (with debug mode):
 =============
 
-.. image::
-https://github.com/abbasovalex/django-SplitJSONWidget-form/blob/master/doc/screenshots/test_nested_dict.png
-    :target:
-    https://github.com/abbasovalex/django-SplitJSONWidget-form/blob/master/doc/screenshots/test_nested_dict.png
+![test](https://github.com/abbasovalex/django-SplitJSONWidget-form/blob/master/doc/sreenshots/test_nested_dict.png?raw=true)
 
 
 
@@ -251,11 +245,7 @@ def test_list(request):
 Screenshot of the result (with debug mode):
 =============
 
-.. image::
-https://github.com/abbasovalex/django-SplitJSONWidget-form/blob/master/doc/screenshots/test_list.png
-    :target:
-    https://github.com/abbasovalex/django-SplitJSONWidget-form/blob/master/doc/screenshots/test_list.png
-
+![simple list](https://github.com/abbasovalex/django-SplitJSONWidget-form/blob/master/doc/sreenshots/test_list_.png?raw=true)
 
 
 ### Example №4
@@ -323,11 +313,10 @@ def test_nested_list(request):
 Screenshot of the result (with debug mode):
 =============
 
-.. image::
-https://github.com/abbasovalex/django-SplitJSONWidget-form/blob/master/doc/screenshots/test_nested_list.png
-    :target:
-    https://github.com/abbasovalex/django-SplitJSONWidget-form/blob/master/doc/screenshots/test_nested_list.png
-
+![nested list](https://github.com/abbasovalex/django-SplitJSONWidget-form/blob/master/doc/sreenshots/test_nested_list%20.png?raw=true)
 
 ## Bugs
 See https://github.com/abbasovalex/django-SplitJSONWidget-form/issues?labels=bug&page=1&state=open
+
+
+## Enjoy!
