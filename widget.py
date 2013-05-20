@@ -52,13 +52,14 @@ class SplitJSONWidget(forms.Widget):
 
     def _prepare_as_ul(self, l):
         if l:
-            result = u'<ul>'
+            result = ''
             for el in l:
                 if isinstance(el, list):
+                    result += u'<ul>'
                     result += '%s' % self._prepare_as_ul(el)
+                    result += '</ul>'
                 else:
-                    result += '<li>%s</li>' % el
-            result += '</ul>'
+                    result += '%s' % el
             return result
         return ''
 
