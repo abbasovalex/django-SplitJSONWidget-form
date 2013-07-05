@@ -125,7 +125,7 @@ setup(
     license='MIT',
     description="Provides a widget that renders JSON data as separate,"
                 " editable inputs.",
-    long_description=read('README.rst'),
+    long_description=read('README.md'),
     author='Alexander Abbassov',
     author_email='aa@vsosisku.ru',
     packages=['splitjson'],
