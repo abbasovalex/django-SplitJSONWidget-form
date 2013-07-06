@@ -6,6 +6,8 @@ A widget that renders JSON data as separate editable inputs.
 ## Installation
 
 ```pip install django-split-json-widget```
+or
+```pip install git+https://github.com/abbasovalex/django-SplitJSONWidget-form.git```
 
 ### Example №1
 
