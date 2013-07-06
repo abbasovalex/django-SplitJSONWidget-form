@@ -5,7 +5,7 @@ A widget that renders JSON data as separate editable inputs.
 
 ## Installation
 
-WIP
+```pip install django-split-json-widget```
 
 ### Example №1
 
