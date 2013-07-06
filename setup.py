@@ -1,8 +1,11 @@
+
 import os
 import re
 import sys
 import codecs
 from fnmatch import fnmatchcase
+import distribute_setup
+distribute_setup.use_setuptools()
 from distutils.util import convert_path
 from setuptools import setup
 
@@ -121,13 +124,14 @@ def find_package_data(where='.', package='',
 setup(
     name="django-split-json-widget",
     version=find_version("splitjson", "__init__.py"),
-    url='',
+    url='https://github.com/abbasovalex/django-SplitJSONWidget-form',
     license='MIT',
     description="Provides a widget that renders JSON data as separate,"
                 " editable inputs.",
     long_description=read('README.md'),
-    author='Alexander Abbassov',
-    author_email='aa@vsosisku.ru',
+    platforms=['any'],
+    author='Alexander Abbasov',
+    author_email='abbasovalex@{nospam}gmail.com',
     packages=['splitjson'],
     package_data=find_package_data(),
     classifiers=[
