@@ -1,11 +1,8 @@
-
 import os
 import re
 import sys
 import codecs
 from fnmatch import fnmatchcase
-import distribute_setup
-distribute_setup.use_setuptools()
 from distutils.util import convert_path
 from setuptools import setup
 
