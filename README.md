@@ -14,8 +14,10 @@ or
 #### forms.py
 
 ```python
+# -*- coding: utf-8 -*-
 from django import forms
-from widgets import SplitJSONWidget
+from splitjson.widgets import SplitJSONWidget
+
 
 class testForm(forms.Form):
     attrs = {'class': 'special', 'size': '40'}
@@ -24,6 +26,7 @@ class testForm(forms.Form):
 
 #### views.py
 ```python
+# -*- coding: utf-8 -*-
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from forms import testForm
@@ -77,8 +80,10 @@ def test_dict(request):
 
 #### forms.py
 ```python
+# -*- coding: utf-8 -*-
 from django import forms
-from widgets import SplitJSONWidget
+from splitjson.widgets import SplitJSONWidget
+
 
 class testForm(forms.Form):
     attrs = {'class': 'special', 'size': '40'}
@@ -87,6 +92,7 @@ class testForm(forms.Form):
 
 #### views.py
 ```python
+# -*- coding: utf-8 -*-
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from forms import testForm
@@ -148,8 +154,9 @@ def test_nested_dict(request):
 
 #### forms.py
 ```python
+# -*- coding: utf-8 -*-
 from django import forms
-from widgets import SplitJSONWidget
+from splitjson.widgets import SplitJSONWidget
 
 
 class testForm(forms.Form):
@@ -159,6 +166,7 @@ class testForm(forms.Form):
 
 #### views.py
 ```python
+# -*- coding: utf-8 -*-
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from forms import testForm
@@ -209,9 +217,10 @@ def test_list(request):
 
 #### forms.py
 ```python
-# -*- coding: utf8 -*-
+# -*- coding: utf-8 -*-
 from django import forms
-from widgets import SplitJSONWidget
+from splitjson.widgets import SplitJSONWidget
+
 
 class testForm(forms.Form):
     attrs = {'class': 'special', 'size': '40'}
@@ -220,6 +229,7 @@ class testForm(forms.Form):
 
 #### views.py
 ```python
+# -*- coding: utf-8 -*-
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from forms import testForm

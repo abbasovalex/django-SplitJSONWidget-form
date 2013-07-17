@@ -22,8 +22,8 @@ def find_version(*file_paths):
 
 # Provided as an attribute, so you can append to these instead
 # of replicating them:
-standard_exclude = ('*.py', '*.pyc', '*$py.class', '*~', '.*', '*.bak')
-standard_exclude_directories = ('.*', 'CVS', '_darcs', './build',
+standard_exclude = ('*.py', '*.pyc', '*$py.class', '*~', '*.bak')
+standard_exclude_directories = ('CVS', '_darcs', './build',
                                 './dist', 'EGG-INFO', '*.egg-info')
 
 
@@ -143,5 +143,6 @@ setup(
         'Topic :: Internet :: WWW/HTTP',
     ],
     zip_safe=True,
-    install_requires=[],
+    install_requires=(
+        'Django>=1.3'),
 )
