@@ -208,7 +208,7 @@ def test_list(request):
 </html>
 ```
 
-#### Result (debug mode enabled)
+#### Result (debug mode is enabled)
 
 ![simple list](https://github.com/abbasovalex/django-SplitJSONWidget-form/blob/master/doc/sreenshots/test_list_.png?raw=true)
 
@@ -271,7 +271,7 @@ def test_nested_list(request):
 </html>
 ```
 
-#### Result (debug mode enabled)
+#### Result (debug mode is enabled)
 
 ![nested list](https://github.com/abbasovalex/django-SplitJSONWidget-form/blob/master/doc/sreenshots/test_nested_list%20.png?raw=true)
 
