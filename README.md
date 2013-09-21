@@ -144,7 +144,7 @@ def test_nested_dict(request):
 </html>
 ```
 
-#### Result (debug mode enabled)
+#### Result (debug mode is enabled)
 
 ![test](https://github.com/abbasovalex/django-SplitJSONWidget-form/blob/master/doc/sreenshots/test_nested_dict.png?raw=true)
 
