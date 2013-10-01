@@ -104,6 +104,7 @@ class SplitJSONWidget(forms.Widget):
                     # parse dict
                     d = {}
                     if apx != root_node:
+                        prefix = apx + self.separator
                         for key, val in copy_raw_data.items():
                             _, _, t = key.rpartition(self.separator)
                             try:
@@ -113,7 +114,7 @@ class SplitJSONWidget(forms.Widget):
                                 pass
                             if key is k:
                                 del copy_raw_data[key]
-                            elif key.startswith(apx):
+                            elif key.startswith(prefix):
                                 d.update({t: val})
                                 del copy_raw_data[key]
                     v = {nk: v}
