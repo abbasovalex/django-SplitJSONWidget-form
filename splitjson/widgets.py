@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from django import forms
+from django import get_version, forms
 from django.forms import Widget
 from django import utils
 import copy
@@ -7,6 +7,10 @@ try:
     import simplejson as json
 except ImportError:
     import json
+if float(get_version()) < 1.9:
+    from dajngo.forms.util import flatatt
+else:
+    from django.forms.utils import flatatt
 
 
 class SplitJSONWidget(forms.Widget):
@@ -23,7 +27,7 @@ class SplitJSONWidget(forms.Widget):
         attrs['value'] = utils.encoding.force_unicode(value)
         attrs['id'] = attrs.get('name', None)
         return u""" <label for="%s">%s:</label>
-        <input%s />""" % (attrs['id'], key, forms.util.flatatt(attrs))
+        <input%s />""" % (attrs['id'], key, flatatt(attrs))
 
     def _to_build(self, name, json_obj):
         inputs = []
