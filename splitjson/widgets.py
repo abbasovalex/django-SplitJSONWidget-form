@@ -8,7 +8,7 @@ try:
 except ImportError:
     import json
 if float(get_version()) < 1.9:
-    from dajngo.forms.util import flatatt
+    from django.forms.util import flatatt
 else:
     from django.forms.utils import flatatt
 
