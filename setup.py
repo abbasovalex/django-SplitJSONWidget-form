@@ -125,10 +125,13 @@ setup(
     license='MIT',
     description="Provides a widget that renders JSON data as separate,"
                 " editable inputs.",
+    keywords='json django widget',
     long_description=read('README.md'),
     platforms=['any'],
-    author='Alexander Abbasov',
+    author='Alexander Abbasov, django-split-json-widget',
     author_email='abbasovalex@{nospam}gmail.com',
+    maintaine='Alexander Abbasov, django-split-json-widget',
+    maintainer_email='abbasovalex@{nospam}gmail.com',
     packages=['splitjson'],
     package_data=find_package_data(),
     classifiers=[
