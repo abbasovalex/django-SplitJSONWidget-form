@@ -3,11 +3,12 @@ from django import get_version, forms
 from django.forms import Widget
 from django import utils
 import copy
+from distutils.version import StrictVersion
 try:
     import simplejson as json
 except ImportError:
     import json
-if float(get_version()) < 1.9:
+if StrictVersion(get_version()) < StrictVersion('1.9.0'):
     from django.forms.util import flatatt
 else:
     from django.forms.utils import flatatt
