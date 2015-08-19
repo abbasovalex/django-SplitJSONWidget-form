@@ -277,3 +277,7 @@ def test_nested_list(request):
 
 ## Known issues
 See https://github.com/abbasovalex/django-SplitJSONWidget-form/issues?labels=bug&page=1&state=open
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/abbasovalex/django-splitjsonwidget-form/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
