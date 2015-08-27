@@ -151,7 +151,7 @@ class SplitJSONWidget(forms.Widget):
     def render(self, name, value, attrs=None):
         try:
             value = json.loads(value)
-        except TypeError:
+        except (TypeError, KeyError):
             pass
         inputs = self._to_build(name, value or {})
         result = self._prepare_as_ul(inputs)
