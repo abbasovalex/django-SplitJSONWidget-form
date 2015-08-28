@@ -12,8 +12,15 @@ env:
     - DJANGO=1.4
     - DJANGO=1.3
 install:
-    - if [[ $TRAVIS_PYTHON_VERSION == '2.6' && $DJANGO < 1.7]]; then pip install -q Django==$DJANGO; fi
-    - if [[ $TRAVIS_PYTHON_VERSION > '2.6' && $DJANGO > 1.6]]; then pip install -q Django==$DJANGO; fi
+    - if [[ $TRAVIS_PYTHON_VERSION == '2.6' && $DJANGO < 1.7 ]]; then
+        pip install -q Django==$DJANGO;
+      fi
+    - if [[ $TRAVIS_PYTHON_VERSION == '2.7' && $DJANGO > 1.6 ]]; then
+        pip install -q Django==$DJANGO;
+      fi
+    - if [[ $TRAVIS_PYTHON_VERSION == '3.2' && $DJANGO > 1.6 ]]; then
+        pip install -q Django==$DJANGO;
+      fi
     - pip install -q -e .
 
 # command to run tests
