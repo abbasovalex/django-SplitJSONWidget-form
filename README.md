@@ -1,6 +1,8 @@
 django-split-json-widget
 ===
 
+[![Build Status](https://travis-ci.org/abbasovalex/django-SplitJSONWidget-form.svg?branch=master)](https://travis-ci.org/abbasovalex/django-SplitJSONWidget-form)
+
 A widget that renders JSON data as separate editable inputs.
 
 ## Installation
@@ -280,4 +282,3 @@ See https://github.com/abbasovalex/django-SplitJSONWidget-form/issues?labels=bug
 
 
 [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/abbasovalex/django-splitjsonwidget-form/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
-
