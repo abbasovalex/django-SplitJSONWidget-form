@@ -16,7 +16,8 @@ else:
 
 class SplitJSONWidget(forms.Widget):
 
-    def __init__(self, attrs=None, newline='<br/>\n', sep='__', debug=False):
+    def __init__(self, attrs=None, newline='<br/>\n', sep='__', debug=False, key_field_conf_map=None):
+        self.key_field_conf_map = key_field_conf_map if isinstance(key_field_conf_map, dict) else {}
         self.newline = newline
         self.separator = sep
         self.debug = debug
@@ -27,8 +28,13 @@ class SplitJSONWidget(forms.Widget):
                                  name="%s%s%s" % (name, self.separator, key))
         attrs['value'] = utils.encoding.force_unicode(value)
         attrs['id'] = attrs.get('name', None)
-        return u""" <label for="%s">%s:</label>
-        <input%s />""" % (attrs['id'], key, flatatt(attrs))
+        field_conf = self.key_field_conf_map.get(key, {})
+        label = utils.encoding.force_unicode(field_conf.get('label', key))
+        help_text = field_conf.get('help_text', u'')
+        if help_text:
+            help_text = u'<span class=helptext>{}</span>'.format(utils.encoding.force_unicode(help_text))
+        return u""" <label for="{key}">{label}:</label>
+        <input{attrs} />{help}""".format(key=attrs['id'], label=label, attrs=flatatt(attrs), help=help_text)
 
     def _to_build(self, name, json_obj):
         inputs = []
