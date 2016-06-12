@@ -4,6 +4,7 @@ from django.forms import Widget
 from django import utils
 import copy
 from distutils.version import StrictVersion
+from collections import OrderedDict
 try:
     import simplejson as json
 except ImportError:
@@ -12,6 +13,24 @@ if StrictVersion(get_version()) < StrictVersion('1.9.0'):
     from django.forms.util import flatatt
 else:
     from django.forms.utils import flatatt
+
+
+def merge_dicts(src_dict, dst_dict):
+    for k, v in src_dict.items():
+        if k not in dst_dict:
+            dst_dict[k] = v
+        else:
+            if type(v) == type(dst_dict[k]):
+                if isinstance(v, dict):
+                    merge_dicts(v, dst_dict[k])
+                elif isinstance(v, list):
+                    dst_dict[k].extend(v)
+                else:
+                    dst_dict[k] = v
+            else:
+                dst_dict[k] = v
+
+    return dst_dict
 
 
 class SplitJSONWidget(forms.Widget):
@@ -72,8 +91,10 @@ class SplitJSONWidget(forms.Widget):
 
     def _to_pack_up(self, root_node, raw_data):
 
-        copy_raw_data = copy.deepcopy(raw_data)
         result = []
+
+        ordered_keys = sorted(raw_data.keys())
+        copy_raw_data = OrderedDict(((k, raw_data[k]) for k in ordered_keys))
 
         def _to_parse_key(k, v):
             if k.find(self.separator) != -1:
@@ -84,6 +105,7 @@ class SplitJSONWidget(forms.Widget):
                     l = []
                     obj = {}
                     index = None
+                    l.append(v)
                     if apx != root_node:
                         for key, val in copy_raw_data.items():
                             head, _, t = key.rpartition(self.separator)
@@ -103,7 +125,6 @@ class SplitJSONWidget(forms.Widget):
                         if obj:
                             for i in obj:
                                 l.append(obj[i])
-                    l.append(v)
                     return _to_parse_key(apx, l)
                 except ValueError:
                     # parse dict
@@ -128,7 +149,8 @@ class SplitJSONWidget(forms.Widget):
             else:
                 return v
 
-        for k, v in raw_data.iteritems():
+        for k in ordered_keys:
+            v = raw_data[k]
             if k in copy_raw_data:
                 # to transform value from list to string
                 v = v[0] if isinstance(v, list) and len(v) is 1 else v
@@ -140,7 +162,7 @@ class SplitJSONWidget(forms.Widget):
                     try:
                         result.extend(d)
                     except:
-                        result.update(d)
+                        merge_dicts(d, result)
         return result
 
     def value_from_datadict(self, data, files, name):
