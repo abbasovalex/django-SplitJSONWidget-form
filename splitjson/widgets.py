@@ -4,7 +4,6 @@ from django.forms import Widget
 from django import utils
 import copy
 from distutils.version import StrictVersion
-from collections import OrderedDict
 try:
     import simplejson as json
 except ImportError:
@@ -94,7 +93,7 @@ class SplitJSONWidget(forms.Widget):
         result = []
 
         ordered_keys = sorted(raw_data.keys())
-        copy_raw_data = OrderedDict(((k, raw_data[k]) for k in ordered_keys))
+        copy_raw_data = copy.deepcopy(raw_data)
 
         def _to_parse_key(k, v):
             if k.find(self.separator) != -1:
@@ -107,7 +106,8 @@ class SplitJSONWidget(forms.Widget):
                     index = None
                     l.append(v)
                     if apx != root_node:
-                        for key, val in copy_raw_data.items():
+                        for key in [ok for ok in ordered_keys if ok in copy_raw_data]:
+                            val = copy_raw_data[key]
                             head, _, t = key.rpartition(self.separator)
                             _, _, index = head.rpartition(self.separator)
                             if key is k:
