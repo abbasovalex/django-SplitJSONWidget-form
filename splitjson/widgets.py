@@ -37,7 +37,7 @@ class SplitJSONWidget(forms.Widget):
             _l = ['%s:%s' % (title, self.newline)]
             for key, value in enumerate(json_obj):
                 _l.append(self._to_build("%s%s%s" % (name,
-                                         self.separator, key), value))
+                                                     self.separator, key), value))
             inputs.extend([_l])
         elif isinstance(json_obj, dict):
             title = name.rpartition(self.separator)[2]
@@ -159,5 +159,4 @@ class SplitJSONWidget(forms.Widget):
             # render json as well
             source_data = u'<hr/>Source data: <br/>%s<hr/>' % str(value)
             result = '%s%s' % (result, source_data)
-            print result
         return utils.safestring.mark_safe(result)
