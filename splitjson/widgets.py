@@ -14,7 +14,6 @@ from django.utils.safestring import mark_safe
 class SplitJSONWidget(Widget):
     """
     Widget to render a single JSONField as a series of text inputs.
-
     """
 
     def __init__(self, attrs=None, newline='<br/>\n', sep='__', debug=False):
