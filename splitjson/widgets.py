@@ -1,20 +1,20 @@
 # -*- coding: utf-8 -*-
-from django import get_version, forms
-from django.forms import Widget
-from django import utils
 import copy
-from distutils.version import StrictVersion
 try:
     import simplejson as json
 except ImportError:
     import json
-if StrictVersion(get_version()) < StrictVersion('1.9.0'):
-    from django.forms.util import flatatt
-else:
-    from django.forms.utils import flatatt
+
+from django.forms import Widget
+from django.forms.utils import flatatt
+from django.utils.encoding import force_str
+from django.utils.safestring import mark_safe
 
 
-class SplitJSONWidget(forms.Widget):
+class SplitJSONWidget(Widget):
+    """
+    Widget to render a single JSONField as a series of text inputs.
+    """
 
     def __init__(self, attrs=None, newline='<br/>\n', sep='__', debug=False):
         self.newline = newline
@@ -22,32 +22,46 @@ class SplitJSONWidget(forms.Widget):
         self.debug = debug
         Widget.__init__(self, attrs)
 
-    def _as_text_field(self, name, key, value, is_sub=False):
-        attrs = self.build_attrs(self.attrs, type='text',
-                                 name="%s%s%s" % (name, self.separator, key))
-        attrs['value'] = utils.encoding.force_unicode(value)
+    def _as_text_field(self, name, key, value):
+        attrs = self.build_attrs(
+            self.attrs,
+            {
+                'type': 'text',
+                'name': f'{name}{self.separator}{key}',
+            },
+        )
+        attrs['value'] = force_str(value)
         attrs['id'] = attrs.get('name', None)
-        return u""" <label for="%s">%s:</label>
-        <input%s />""" % (attrs['id'], key, flatatt(attrs))
+        return (
+            f"""<label for="{attrs['id']}">{key}:</label>"""
+            f'<input{flatatt(attrs)} />'
+        )
 
     def _to_build(self, name, json_obj):
         inputs = []
         if isinstance(json_obj, list):
             title = name.rpartition(self.separator)[2]
-            _l = ['%s:%s' % (title, self.newline)]
+            _l = [f'{title}:{self.newline}']
             for key, value in enumerate(json_obj):
-                _l.append(self._to_build("%s%s%s" % (name,
-                                                     self.separator, key), value))
+                _l.append(
+                    self._to_build(
+                        f'{name}{self.separator}{key}',
+                        value,
+                    )
+                )
             inputs.extend([_l])
         elif isinstance(json_obj, dict):
             title = name.rpartition(self.separator)[2]
-            _l = ['%s:%s' % (title, self.newline)]
+            _l = [f'{title}:{self.newline}']
             for key, value in json_obj.items():
-                _l.append(self._to_build("%s%s%s" % (name,
-                                                     self.separator, key),
-                                         value))
+                _l.append(
+                    self._to_build(
+                        f'{name}{self.separator}{key}',
+                        value,
+                    )
+                )
             inputs.extend([_l])
-        elif isinstance(json_obj, (basestring, int, float)):
+        elif isinstance(json_obj, (str, int, float)):
             name, _, key = name.rpartition(self.separator)
             inputs.append(self._as_text_field(name, key, json_obj))
         elif json_obj is None:
@@ -60,13 +74,11 @@ class SplitJSONWidget(forms.Widget):
             result = ''
             for el in l:
                 if isinstance(el, list) and len(l) == 1:
-                    result += '%s' % self._prepare_as_ul(el)
+                    result += str(self._prepare_as_ul(el))
                 elif isinstance(el, list):
-                    result += '<ul>'
-                    result += '%s' % self._prepare_as_ul(el)
-                    result += '</ul>'
+                    result += f'<ul>{self._prepare_as_ul(el)}</ul>'
                 else:
-                    result += '<li>%s</li>' % el
+                    result += f'<li>{el}</li>'
             return result
         return ''
 
@@ -83,7 +95,6 @@ class SplitJSONWidget(forms.Widget):
                     int(nk)
                     l = []
                     obj = {}
-                    index = None
                     if apx != root_node:
                         for key, val in copy_raw_data.items():
                             head, _, t = key.rpartition(self.separator)
@@ -128,7 +139,7 @@ class SplitJSONWidget(forms.Widget):
             else:
                 return v
 
-        for k, v in raw_data.iteritems():
+        for k, v in raw_data.items():
             if k in copy_raw_data:
                 # to transform value from list to string
                 v = v[0] if isinstance(v, list) and len(v) is 1 else v
@@ -139,7 +150,7 @@ class SplitJSONWidget(forms.Widget):
                         result = type(d)()
                     try:
                         result.extend(d)
-                    except:
+                    except Exception:
                         result.update(d)
         return result
 
@@ -148,7 +159,7 @@ class SplitJSONWidget(forms.Widget):
         result = self._to_pack_up(name, data_copy)
         return json.dumps(result)
 
-    def render(self, name, value, attrs=None):
+    def render(self, name, value, attrs=None, renderer=None):
         try:
             value = json.loads(value)
         except (TypeError, KeyError):
@@ -157,6 +168,6 @@ class SplitJSONWidget(forms.Widget):
         result = self._prepare_as_ul(inputs)
         if self.debug:
             # render json as well
-            source_data = u'<hr/>Source data: <br/>%s<hr/>' % str(value)
-            result = '%s%s' % (result, source_data)
-        return utils.safestring.mark_safe(result)
+            source_data = f'<hr/>Source data: <br/>{value}<hr/>'
+            result = f'{result}{source_data}'
+        return mark_safe(result)
