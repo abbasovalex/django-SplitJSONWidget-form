@@ -148,6 +148,5 @@ setup(
         'Topic :: Internet :: WWW/HTTP',
     ],
     zip_safe=True,
-    install_requires=(
-        'Django>=3.0'),
+    install_requires='Django>=2.2.19',
 )
